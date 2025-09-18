@@ -20,7 +20,12 @@ module detector (
         l_past <= i_in;
     end
     
+    // ___/‾‾‾ Передний фронт
     assign o_posedge = (~ l_past) & (  i_in);
+
+    // ‾‾‾\___ Задний фронт
     assign o_negedge = (  l_past) & (~ i_in);
+
+    // __/‾\__ Изменение сигнала
 	assign o_edge    = (  l_past) ^ (  i_in);
 endmodule

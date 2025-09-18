@@ -33,34 +33,34 @@ module schmitt_trigger # (
         else begin
             case (l_state)
                 START: begin
-                    l_count <=  (i_in) ? HIGH :
+                    l_state  <= (i_in) ? HIGH :
                                 LOW;
                 end
                 
                 LOW: begin
-                    l_count <=  (i_in) ? RISE :
+                    l_state  <= (i_in) ? RISE :
                                 LOW;
                 end
                 
                 RISE: begin
-                    l_count <=  (l_count == p_FILTER) ? HIGH :
+                    l_state  <= (l_count == p_FILTER) ? HIGH :
                                 (i_in) ? RISE :
                                 LOW;
                 end
                 
                 HIGH: begin
-                    l_count <=  (i_in) ? HIGH :
+                    l_state  <= (i_in) ? HIGH :
                                 FALL;
                 end
                 
                 FALL: begin
-                    l_count <=  (l_count == p_FILTER) ? LOW :
+                    l_state  <= (l_count == p_FILTER) ? LOW :
                                 (i_in) ? HIGH :
                                 FALL;
                 end
                 
                 default: begin
-                    l_state <= START;
+                    l_state  <= START;
                 end
             endcase
         end
@@ -81,6 +81,7 @@ module schmitt_trigger # (
         end
     end
     
-    assign o_out =  (l_state == HIGH) ? '1 :
-					(l_state == FALL) ? '1 : '0;
+    assign o_out =
+        (l_state == HIGH) ? '1 :
+		(l_state == FALL) ? '1 : '0;
 endmodule
