@@ -68,7 +68,7 @@ module chess_clock_fsm (
 
                 STOP_A: begin
                     l_state  <= (i_restart) ? START :
-                                (i_stop) ? TURN_A :
+                                (i_player_a) ? TURN_A :
                                 STOP_A;
                 end
 
@@ -87,7 +87,7 @@ module chess_clock_fsm (
 
                 STOP_B: begin
                     l_state  <= (i_restart) ? START :
-                                (i_stop) ? TURN_B :
+                                (i_player_b) ? TURN_B :
                                 STOP_B;
                 end
 
@@ -107,5 +107,5 @@ module chess_clock_fsm (
     assign o_player_a_win  = (l_state == WIN_A) ? '1 : '0;
     assign o_player_b_stop = (l_state == TURN_B) ? '0 : '1;
     assign o_player_b_win  = (l_state == WIN_B) ? '1 : '0;
-    assign o_restart       = (l_state == START) ? '1 : '0;
+    assign o_restart       = (l_state == IDLE) ? '1 : '0;
 endmodule
