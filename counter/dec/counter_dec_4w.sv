@@ -78,10 +78,10 @@ module counter_dec_4w (
     counter_dec cnt_3 (
         .i_clk      (i_clk),
         .i_rst      (i_rst),
-        .i_count    (i_count[2]),
+        .i_count    (i_count[3]),
         .i_plus     (w_plus_2),
         .i_minus    (w_minus_2),
-        .o_count    (o_count[2]),
+        .o_count    (o_count[3]),
         .o_plus     (w_plus_3),
         .o_minus    (w_minus_3),
         .o_zero     (w_zero_3)
