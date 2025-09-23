@@ -2,7 +2,7 @@
 
 /// Делитель тактовой частоты
 module clock # (
-    parameter p_DIVIDER = 50000000
+    p_divider = 50000000
     )(
     i_clk,
     i_rst,
@@ -21,8 +21,8 @@ module clock # (
         OVERFLOW
     } l_state;
 
-    localparam lp_WIDTH = $clog2(p_DIVIDER) + 1;
-    logic [lp_WIDTH-1:0] l_count = '0;
+    localparam lp_depth = $clog2(p_divider) + 1;
+    logic [lp_depth-1:0] l_count = '0;
     
     always_ff @ (posedge i_clk) begin
         if (i_rst) begin
@@ -32,7 +32,7 @@ module clock # (
             case (l_state)
                 IDLE: begin
                     l_state <=  (i_stop) ? STOP :
-                                (l_count == p_DIVIDER) ? OVERFLOW :
+                                (l_count == p_divider) ? OVERFLOW :
                                 IDLE;
                 end
 

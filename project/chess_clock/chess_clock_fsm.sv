@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 
-/// Шахматные часы FSM
+/// Шахматные часы (fsm)
 module chess_clock_fsm (
     i_clk,
     i_rst,

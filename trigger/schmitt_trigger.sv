@@ -2,14 +2,14 @@
 
 /// Триггер Шмитта
 module schmitt_trigger # (
-    parameter p_FILTER = 5
+    p_scale = 5
     )(
     i_clk,
     i_rst,
     i_in,
     o_out,
     );
-    
+
     input       i_clk;
     input       i_rst;
     input       i_in;
@@ -23,8 +23,8 @@ module schmitt_trigger # (
         FALL
     } l_state = START;
 
-    localparam lp_WIDTH = $clog2(p_FILTER);
-    logic [lp_WIDTH-1:0] l_count = '0;
+    localparam lp_depth = $clog2(p_scale);
+    logic [lp_depth-1:0] l_count = '0;
     
     always_ff @ (posedge i_clk) begin
         if (i_rst) begin
@@ -43,7 +43,7 @@ module schmitt_trigger # (
                 end
                 
                 RISE: begin
-                    l_state  <= (l_count == p_FILTER) ? HIGH :
+                    l_state  <= (l_count == p_scale) ? HIGH :
                                 (i_in) ? RISE :
                                 LOW;
                 end
@@ -54,7 +54,7 @@ module schmitt_trigger # (
                 end
                 
                 FALL: begin
-                    l_state  <= (l_count == p_FILTER) ? LOW :
+                    l_state  <= (l_count == p_scale) ? LOW :
                                 (i_in) ? HIGH :
                                 FALL;
                 end
