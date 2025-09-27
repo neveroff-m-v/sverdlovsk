@@ -10,6 +10,8 @@ module schmitt_trigger # (
     o_out,
     );
 
+    localparam lp_depth = $clog2(p_scale);
+
     input       i_clk;
     input       i_rst;
     input       i_in;
@@ -23,7 +25,6 @@ module schmitt_trigger # (
         FALL
     } l_state = START;
 
-    localparam lp_depth = $clog2(p_scale);
     logic [lp_depth-1:0] l_count = '0;
     
     always_ff @ (posedge i_clk) begin

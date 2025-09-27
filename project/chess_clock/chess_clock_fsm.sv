@@ -6,11 +6,11 @@ module chess_clock_fsm (
     i_rst,
     i_restart,
     i_stop,
-    i_player_a,
+    i_player_a_turn,
     i_player_a_zero,
     o_player_a_stop,
     o_player_a_win,
-    i_player_b,
+    i_player_b_turn,
     i_player_b_zero,
     o_player_b_stop,
     o_player_b_win,
@@ -21,11 +21,11 @@ module chess_clock_fsm (
     input           i_rst;
     input           i_restart;
     input           i_stop;
-    input           i_player_a;
+    input           i_player_a_turn;
     input           i_player_a_zero;
     output          o_player_a_stop;
     output          o_player_a_win;
-    input           i_player_b;
+    input           i_player_b_turn;
     input           i_player_b_zero;
     output          o_player_b_stop;
     output          o_player_b_win;
@@ -53,8 +53,8 @@ module chess_clock_fsm (
                 end
 
                 IDLE: begin
-                    l_state  <= (i_player_a) ? TURN_A :
-                                (i_player_b) ? TURN_B :
+                    l_state  <= (i_player_a_turn) ? TURN_A :
+                                (i_player_b_turn) ? TURN_B :
                                 IDLE;
                 end
 
@@ -62,13 +62,13 @@ module chess_clock_fsm (
                     l_state  <= (i_restart) ? START :
                                 (i_stop) ? STOP_A :
                                 (i_player_a_zero) ? WIN_B :
-                                (i_player_a) ? TURN_B :
+                                (i_player_a_turn) ? TURN_B :
                                 TURN_A;
                 end
 
                 STOP_A: begin
                     l_state  <= (i_restart) ? START :
-                                (i_player_a) ? TURN_A :
+                                (i_player_a_turn) ? TURN_A :
                                 STOP_A;
                 end
 
@@ -81,13 +81,13 @@ module chess_clock_fsm (
                     l_state  <= (i_restart) ? START :
                                 (i_stop) ? STOP_B :
                                 (i_player_b_zero) ? WIN_A :
-                                (i_player_b) ? TURN_A :
+                                (i_player_b_turn) ? TURN_A :
                                 TURN_B;
                 end
 
                 STOP_B: begin
                     l_state  <= (i_restart) ? START :
-                                (i_player_b) ? TURN_B :
+                                (i_player_b_turn) ? TURN_B :
                                 STOP_B;
                 end
 

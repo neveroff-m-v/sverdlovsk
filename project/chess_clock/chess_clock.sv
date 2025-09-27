@@ -7,142 +7,32 @@ module chess_clock # (
     )(
     i_sw_stop,
     i_sw_restart,
-    i_sw_player_a,
-    i_sw_player_b,
-	i_sw_init,
-    o_sgmnt_player_a,
-    o_sgmnt_player_b,
-	o_led_player_a,
-	o_led_player_b,
+    i_sw_init,
+    i_player_a_sw,
+    o_player_a_sgmnt,
+    o_player_a_led,
+    i_player_b_sw,
+    o_player_b_sgmnt,
+	o_player_b_led,
+
     i_clk_50m,
     i_rst
     );
     
     input           i_sw_stop;
     input           i_sw_restart;
-    input           i_sw_player_a;
-    input           i_sw_player_b;
 	input [3:0]     i_sw_init [1:0];
-    output [6:0]    o_sgmnt_player_a [1:0];
-    output [6:0]    o_sgmnt_player_b [1:0];
-	output [3:0]    o_led_player_a;
-	output [3:0]    o_led_player_b;
+    input           i_player_a_sw;
+    output [6:0]    o_player_a_sgmnt [1:0];
+    output [3:0]    o_player_a_led;
+    input           i_player_b_sw;
+    output [6:0]    o_player_b_sgmnt [1:0];
+	output [3:0]    o_player_b_led;
 
     input           i_clk_50m;
     input           i_rst;
-	 
-	wire [3:0] w_init [1:0];
-
-	/// Драйвер тактовой кнопки / тумблера (каскад)
-    drv_switch_row # (
-        .p_count        (4),
-        .p_scale        (p_scale),
-        .p_mode         (`PULLDOWN)        
-    ) 
-    sw_init_0 (
-        .i_drv_sw       (i_sw_init[0]),
-        .i_clk          (i_clk_50m),
-        .i_rst          (i_rst),
-        .o_press        (w_init[0]), 
-        .o_click        (),
-        .o_release      (),
-        .o_toggle       (),
-        .o_toggle_common()     
-    );
-	 
-	/// Драйвер тактовой кнопки / тумблера (каскад)
-    drv_switch_row # (
-        .p_count        (4),
-        .p_scale        (p_scale),
-        .p_mode         (`PULLDOWN)   
-    )
-    sw_init_1 (
-        .i_drv_sw       (i_sw_init[1]),
-        .i_clk          (i_clk_50m),
-        .i_rst          (i_rst),
-        .o_press        (w_init[1]), 
-        .o_click        (),
-        .o_release      (),
-        .o_toggle       (),
-        .o_toggle_common()     
-    );
 
     wire w_restart;
-
-    wire w_player_a_stop;
-    wire w_player_a_tick;
-    /// Делитель тактовой частоты
-    clock # (
-        .p_divider  (p_divider)
-    ) 
-    clk_player_a (
-        .i_clk      (i_clk_50m),
-        .i_rst      (w_restart),
-        .i_stop     (w_player_a_stop),
-        .o_out      (w_player_a_tick)
-    );
-
-    wire [3:0] w_player_a_val [1:0];
-    /// Драйвер 7-сегментного индикатора (десятичный)
-    drv_segment_dec_row # (
-        .p_count    (2)
-    ) 
-    sgmnt_player_a (
-        .o_drv_sgmnt(o_sgmnt_player_a),
-        .i_value    (w_player_a_val)
-    );
-
-    wire w_player_a_zero;
-    /// Счетчик десятичный (2 разряда)
-    counter_dec_2w cnt_player_a (
-        .i_clk      (i_clk_50m),
-        .i_rst      (w_restart),
-        .i_count    (w_init),
-        .i_plus     (),
-        .i_minus    (w_player_a_tick),
-        .o_count    (w_player_a_val),
-        .o_plus     (),
-        .o_minus    (),
-        .o_zero     (w_player_a_zero)
-    );
-    
-    wire w_player_b_stop;
-    wire w_player_b_tick;
-    /// Делитель тактовой частоты
-    clock # (
-        .p_divider  (p_divider)
-    ) 
-    clk_player_b (
-        .i_clk      (i_clk_50m),
-        .i_rst      (w_restart),
-        .i_stop     (w_player_b_stop),
-        .o_out      (w_player_b_tick)
-    );
-
-    wire [3:0] w_player_b_val [1:0];
-    /// Драйвер 7-сегментного индикатора (десятичный)
-    drv_segment_dec_row # (
-        .p_count    (2)
-    ) 
-    sgmnt_player_b (
-        .o_drv_sgmnt(o_sgmnt_player_b),
-        .i_value    (w_player_b_val)
-    );
-
-    wire w_player_b_zero;
-    /// Счетчик десятичный (2 разряда)
-    counter_dec_2w cnt_player_b (
-        .i_clk      (i_clk_50m),
-        .i_rst      (w_restart),
-        .i_count    (w_init),
-        .i_plus     (),
-        .i_minus    (w_player_b_tick),
-        .o_count    (w_player_b_val),
-        .o_plus     (),
-        .o_minus    (),
-        .o_zero     (w_player_b_zero)
-    );
-
     wire w_sw_restart_click;      
     /// Драйвер тактовой кнопки / тумблера
     drv_switch # (
@@ -174,59 +64,85 @@ module chess_clock # (
         .o_release  (),
         .o_toggle   ()   
     );
-
-    wire w_sw_player_a_click;      
-    /// Драйвер тактовой кнопки / тумблера
-    drv_switch # (
-        .p_scale    (p_scale),
-        .p_mode     (`PULLUP)   
-    )
-    sw_player_a (
-        .i_drv_sw   (i_sw_player_a),
-        .i_clk      (i_clk_50m),
-        .i_rst      (i_rst),
-        .o_press    (), 
-        .o_click    (w_sw_player_a_click),
-        .o_release  (),
-        .o_toggle   ()   
+	 
+	wire [3:0] w_init [1:0];
+	/// Драйвер тактовой кнопки / тумблера (каскад)
+    drv_switch_mtx # (
+        .p_line         (2),
+        .p_column       (4),
+        .p_scale        (p_scale),
+        .p_mode         (`PULLDOWN)        
+    ) 
+    sw_init (
+        .i_drv_sw       (i_sw_init),
+        .i_clk          (i_clk_50m),
+        .i_rst          (i_rst),
+        .o_press        (w_init), 
+        .o_click        (),
+        .o_release      (),
+        .o_toggle       (),
+        .o_toggle_common()     
     );
 
-    wire w_sw_player_b_click;      
-    /// Драйвер тактовой кнопки / тумблера
-    drv_switch # (
-        .p_scale    (p_scale),
-        .p_mode     (`PULLUP)   
+    wire w_player_a_stop;
+    wire w_player_a_win;
+    wire w_player_a_turn;
+    wire w_player_a_zero;
+    /// Шахматные часы (интерфейс игрока)
+    chess_clock_player # (
+        .p_divider  (p_divider),
+        .p_scale    (p_scale)
     )
-    sw_player_b (
-        .i_drv_sw   (i_sw_player_b),
+    player_a (
+        .i_drv_sw   (i_player_a_sw),
+        .o_drv_sgmnt(o_player_a_sgmnt),
+        .o_drv_led  (o_player_a_led),
         .i_clk      (i_clk_50m),
-        .i_rst      (i_rst),
-        .o_press    (), 
-        .o_click    (w_sw_player_b_click),
-        .o_release  (),
-        .o_toggle   ()   
+        .i_rst      (w_restart),
+        .i_init     (w_init),
+        .i_stop     (w_player_a_stop),
+        .i_win      (w_player_a_win),
+        .o_turn     (w_player_a_turn),
+        .o_zero     (w_player_a_zero)
+    );
+    
+    wire w_player_b_stop;
+    wire w_player_b_win;
+    wire w_player_b_turn;
+    wire w_player_b_zero;
+    /// Шахматные часы (интерфейс игрока)
+    chess_clock_player # (
+        .p_divider  (p_divider),
+        .p_scale    (p_scale)
+    )
+    player_b (
+        .i_drv_sw   (i_player_b_sw),
+        .o_drv_sgmnt(o_player_b_sgmnt),
+        .o_drv_led  (o_player_b_led),
+        .i_clk      (i_clk_50m),
+        .i_rst      (w_restart),
+        .i_init     (w_init),
+        .i_stop     (w_player_b_stop),
+        .i_win      (w_player_b_win),
+        .o_turn     (w_player_b_turn),
+        .o_zero     (w_player_b_zero)
     );
 
-	wire w_player_a_win;
-	wire w_player_b_win;
     /// Шахматные часы FSM
     chess_clock_fsm fsm (
         .i_clk          (i_clk_50m),
         .i_rst          (i_rst),
         .i_restart      (w_sw_restart_click),
         .i_stop         (w_sw_stop_click),
-        .i_player_a     (w_sw_player_a_click),
+        .i_player_a_turn(w_player_a_turn),
         .i_player_a_zero(w_player_a_zero),
         .o_player_a_stop(w_player_a_stop),
 		.o_player_a_win (w_player_a_win),
-        .i_player_b     (w_sw_player_b_click),
+        .i_player_b_turn(w_player_b_turn),
         .i_player_b_zero(w_player_b_zero),
         .o_player_b_stop(w_player_b_stop),
 		.o_player_b_win (w_player_b_win),
         .o_restart      (w_restart)
     );
-	
-	assign o_led_player_b = {w_player_a_win, w_player_a_win, w_player_a_win, w_player_a_win};
-	assign o_led_player_a = {w_player_b_win, w_player_b_win, w_player_b_win, w_player_b_win};
 
 endmodule

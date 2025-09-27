@@ -52,6 +52,6 @@ module drv_switch_row # (
     endgenerate
 	
 	assign o_toggle = w_toggle;
-    assign o_toggle_common = |w_toggle;
+    assign o_toggle_common =| w_toggle;
 	
 endmodule

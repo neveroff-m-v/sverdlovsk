@@ -1,28 +1,31 @@
 `timescale 1ns / 1ps
 
-/// Делитель тактовой частоты
-module clock # (
-    p_divider = 50000000
+/// Таймер
+module timer # (
+    p_scale = 5
     )(
     i_clk,
     i_rst,
     i_stop,
-    o_out
+    o_time,
+    o_end
     );
+
+    localparam lp_depth = $clog2(p_scale);
     
-    input       i_clk;
-    input       i_rst;
-    input       i_stop;
-    output      o_out;
+    input                   i_clk;
+    input                   i_rst;
+    input                   i_stop;
+    output [lp_depth-1:0]   o_time;
+    output                  o_end;
     
     enum logic[2:0] {
         IDLE,
         STOP,
-        OVERFLOW
-    } l_state;
+        END
+    } l_state = IDLE;
 
-    localparam lp_depth = $clog2(p_divider) + 1;
-    logic [lp_depth-1:0] l_count = '0;
+    logic [lp_depth-1:0] l_time = '0;
     
     always_ff @ (posedge i_clk) begin
         if (i_rst) begin
@@ -32,7 +35,7 @@ module clock # (
             case (l_state)
                 IDLE: begin
                     l_state <=  (i_stop) ? STOP :
-                                (l_count == p_divider) ? OVERFLOW :
+                                (l_time == p_scale) ? END :
                                 IDLE;
                 end
 
@@ -41,7 +44,7 @@ module clock # (
                                 IDLE;
                 end
                 
-                OVERFLOW: begin
+                END: begin
                     l_state <=  IDLE;
                 end
                 
@@ -54,17 +57,18 @@ module clock # (
 
     always_ff @ (posedge i_clk) begin
         if (i_rst) begin
-            l_count <= '0;
+            l_time <= '0;
         end
         else begin
-            case (l_state)
-                IDLE: l_count <= l_count + '1;
-                STOP: l_count <= l_count;
-                OVERFLOW: l_count <= '0;
-                default: l_count <= l_count;
+            case (l_time)
+                IDLE: l_time <= l_time + '1;
+                STOP: l_time <= l_time;
+                END: l_time <= '0;
+                default: l_time <= l_time;
             endcase
         end
     end
     
-    assign o_out = (l_state == OVERFLOW) ? '1 : '0;
+    assign o_time = l_time;
+    assign o_end = (l_state == END) ? '1 : '0;
 endmodule

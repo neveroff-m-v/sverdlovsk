@@ -64,7 +64,7 @@ module drv_switch # (
         .i_in       (w_sw_signal),
         .o_posedge  (w_posedge),
         .o_negedge  (w_negedge),
-        .o_edge     (w_edge),
+        .o_edge     (w_edge)
     );
     
     assign o_press      = w_sw_signal;

@@ -2,23 +2,81 @@
 
 /// Шахматные часы (интерфейс игрока)
 module chess_clock_player # (
-    p_divider = 17_865_771,
+    p_divider = 50_000_000,
     p_scale = 3
     )(
-    i_sw_turn,
-    o_sgmnt,
-	o_led,
-    i_clk_50m,
+    i_drv_sw,
+    o_drv_sgmnt,
+	o_drv_led,
+    i_clk,
     i_rst,
-    i_init
+    i_init,
+    i_stop,
+    i_win,
+    o_turn,
+    o_zero
     );
     
-    input           i_sw_turn;
-    output [6:0]    o_sgmnt_player_a [1:0];
-    output [6:0]    o_sgmnt_player_b [1:0];
-	output [3:0]    o_led_player_a;
-	output [3:0]    o_led_player_b;
+    input           i_drv_sw;
+    output [6:0]    o_drv_sgmnt [1:0];
+	output [3:0]    o_drv_led;
 
-    input           i_clk_50m;
+    input           i_clk;
     input           i_rst;
     input [3:0]     i_init [1:0];
+    input           i_stop;
+    input           i_win;
+    output          o_turn;
+    output          o_zero;
+     
+    /// Драйвер тактовой кнопки / тумблера
+    drv_switch # (
+        .p_scale    (p_scale),
+        .p_mode     (`PULLUP)   
+    )
+    sw (
+        .i_drv_sw   (i_drv_sw),
+        .i_clk      (i_clk),
+        .i_rst      (i_rst),
+        .o_press    (), 
+        .o_click    (o_turn),
+        .o_release  (),
+        .o_toggle   ()   
+    );
+
+    wire w_tick;
+    /// Делитель тактовой частоты
+    clock # (
+        .p_divider  (p_divider)
+    ) 
+    clk (
+        .i_clk      (i_clk),
+        .i_rst      (i_rst),
+        .i_stop     (i_stop),
+        .o_out      (w_tick)
+    );
+
+    wire [3:0] w_val [1:0];
+    /// Драйвер 7-сегментного индикатора (десятичный) (каскад)
+    drv_segment_dec_row # (
+        .p_count    (2)
+    ) 
+    sgmnt (
+        .o_drv_sgmnt(o_drv_sgmnt),
+        .i_value    (w_val)
+    );
+
+    /// Счетчик десятичный (2 разряда)
+    counter_dec_2w cnt_player_a (
+        .i_clk      (i_clk),
+        .i_rst      (i_rst),
+        .i_count    (i_init),
+        .i_plus     (),
+        .i_minus    (w_tick),
+        .o_count    (w_val),
+        .o_plus     (),
+        .o_minus    (),
+        .o_zero     (o_zero)
+    );
+
+endmodule
