@@ -7,7 +7,7 @@ module schmitt_trigger # (
     i_clk,
     i_rst,
     i_in,
-    o_out,
+    o_out
     );
 
     localparam lp_depth = $clog2(p_scale);

@@ -1,5 +1,7 @@
 `timescale 1ns / 1ps
 
+//import constant::*;
+
 /// Шахматные часы
 module chess_clock # (
     p_divider = 17_865_771,
@@ -66,10 +68,10 @@ module chess_clock # (
     );
 	 
 	wire [3:0] w_init [1:0];
-	/// Драйвер тактовой кнопки / тумблера (каскад)
-    drv_switch_mtx # (
-        .p_line         (2),
-        .p_column       (4),
+	/// Драйвер тактовой кнопки / тумблера (матрица)
+    drv_switch_h_w # (
+        .p_height       (2),
+        .p_width        (4),
         .p_scale        (p_scale),
         .p_mode         (`PULLDOWN)        
     ) 

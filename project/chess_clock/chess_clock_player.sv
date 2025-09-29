@@ -58,8 +58,8 @@ module chess_clock_player # (
 
     wire [3:0] w_val [1:0];
     /// Драйвер 7-сегментного индикатора (десятичный) (каскад)
-    drv_segment_dec_row # (
-        .p_count    (2)
+    drv_segment_dec_w # (
+        .p_width    (2)
     ) 
     sgmnt (
         .o_drv_sgmnt(o_drv_sgmnt),

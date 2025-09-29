@@ -8,21 +8,21 @@
     ╚═ 3 ═╝ 
 */
 
-/// Драйвер 7-сегментного индикатора (десятичный без знака) (каскад)
-module drv_segment_dec_row # (
-    p_count = 4
+/// Драйвер 7-сегментного индикатора (десятичный без знака) (строка)
+module drv_segment_dec_w # (
+    p_width = 4
     )(
     o_drv_sgmnt,
     i_value
     );
     
-    output [6:0]    o_drv_sgmnt [p_count-1:0];
+    output [6:0]    o_drv_sgmnt [p_width-1:0];
     
-    input [3:0]     i_value [p_count-1:0];
+    input [3:0]     i_value [p_width-1:0];
 
     genvar i;
     generate
-    for (i = 0; i < p_count; i++) begin : segment
+    for (i = 0; i < p_width; i++) begin : segment
         /// Драйвер 7-сегментного индикатора (десятичный)
         drv_segment_dec sgmnt_player_a_1 (
             .o_drv_sgmnt(o_drv_sgmnt[i]),

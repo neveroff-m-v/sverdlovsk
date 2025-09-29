@@ -3,9 +3,9 @@
 `define PULLUP 0
 `define PULLDOWN 1
 
-/// Драйвер тактовой кнопки / тумблера (каскад)
-module drv_switch_row # (
-    p_count = 4,
+/// Драйвер тактовой кнопки / тумблера (строка)
+module drv_switch_w # (
+    p_width = 4,
     p_scale = 5,
     p_mode = `PULLUP
     )(
@@ -19,21 +19,21 @@ module drv_switch_row # (
     o_toggle_common
     );
     
-    input [p_count-1:0]     i_drv_sw;
+    input [p_width-1:0]     i_drv_sw;
     
     input       	        i_clk;
     input       	        i_rst;
-    output [p_count-1:0]	o_press;
-    output [p_count-1:0]    o_click;
-    output [p_count-1:0]    o_release;
-    output [p_count-1:0]    o_toggle;
+    output [p_width-1:0]	o_press;
+    output [p_width-1:0]    o_click;
+    output [p_width-1:0]    o_release;
+    output [p_width-1:0]    o_toggle;
     output                  o_toggle_common; 
 
-	wire [p_count-1:0] w_toggle;
+	wire [p_width-1:0] w_toggle;
 	
     genvar i;
     generate
-    for (i = 0; i < p_count; i++) begin : switch
+    for (i = 0; i < p_width; i++) begin : switch
         /// Драйвер тактовой кнопки / тумблера
         drv_switch # (
             .p_scale 	(p_scale),
