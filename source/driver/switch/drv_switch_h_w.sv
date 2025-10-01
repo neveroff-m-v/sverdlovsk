@@ -1,14 +1,11 @@
 `timescale 1ns / 1ps
 
-`define PULLUP 0
-`define PULLDOWN 1
-
 /// Драйвер тактовой кнопки / тумблера (матрица)
 module drv_switch_h_w # (
     p_height = 4,
     p_width = 4,
     p_scale = 5,
-    p_mode = `PULLUP
+    p_mode = "pullup"
     )(
     i_drv_sw,
     i_clk,
@@ -36,8 +33,8 @@ module drv_switch_h_w # (
     generate
     for (i = 0; i < p_height; i++) begin : switch
         /// Драйвер тактовой кнопки / тумблера (каскад)
-        drv_switch_row # (
-            .p_count    (p_width),
+        drv_switch_w # (
+            .p_width    (p_width),
             .p_scale 	(p_scale),
             .p_mode     (p_mode)
         )

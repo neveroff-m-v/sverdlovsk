@@ -1,12 +1,9 @@
 `timescale 1ns / 1ps
 
-`define PULLUP 0
-`define PULLDOWN 1
-
 /// Драйвер тактовой кнопки / тумблера
 module drv_switch # (
     p_scale = 5,
-    p_mode = `PULLUP
+    p_mode = "pullup"
     )(
     i_drv_sw,
     i_clk,
@@ -28,7 +25,7 @@ module drv_switch # (
 
     wire w_sw_signal;
     generate
-    if (p_mode == `PULLUP) begin
+    if (p_mode == "pullup") begin
         /// Триггер Шмитта
         schmitt_trigger # (
             .p_scale 	(p_scale)
@@ -41,7 +38,7 @@ module drv_switch # (
         );
     end
 
-    else begin
+    if (p_mode == "pulldown") begin
         /// Триггер Шмитта
         schmitt_trigger # (
             .p_scale 	(p_scale)

@@ -107,5 +107,5 @@ module chess_clock_fsm (
     assign o_player_a_win  = (l_state == WIN_A) ? '1 : '0;
     assign o_player_b_stop = (l_state == TURN_B) ? '0 : '1;
     assign o_player_b_win  = (l_state == WIN_B) ? '1 : '0;
-    assign o_restart       = (l_state == IDLE) ? '1 : '0;
+    assign o_restart       = (l_state == START) ? '1 : '0;
 endmodule

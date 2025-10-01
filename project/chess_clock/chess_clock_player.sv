@@ -10,6 +10,7 @@ module chess_clock_player # (
 	o_drv_led,
     i_clk,
     i_rst,
+    i_restart,
     i_init,
     i_stop,
     i_win,
@@ -23,6 +24,7 @@ module chess_clock_player # (
 
     input           i_clk;
     input           i_rst;
+    input           i_restart;
     input [3:0]     i_init [1:0];
     input           i_stop;
     input           i_win;
@@ -32,7 +34,7 @@ module chess_clock_player # (
     /// Драйвер тактовой кнопки / тумблера
     drv_switch # (
         .p_scale    (p_scale),
-        .p_mode     (`PULLUP)   
+        .p_mode     ("pullup")   
     )
     sw (
         .i_drv_sw   (i_drv_sw),
@@ -51,25 +53,16 @@ module chess_clock_player # (
     ) 
     clk (
         .i_clk      (i_clk),
-        .i_rst      (i_rst),
+        .i_rst      (i_restart),
         .i_stop     (i_stop),
         .o_out      (w_tick)
     );
 
     wire [3:0] w_val [1:0];
-    /// Драйвер 7-сегментного индикатора (десятичный) (каскад)
-    drv_segment_dec_w # (
-        .p_width    (2)
-    ) 
-    sgmnt (
-        .o_drv_sgmnt(o_drv_sgmnt),
-        .i_value    (w_val)
-    );
-
     /// Счетчик десятичный (2 разряда)
     counter_dec_2w cnt_player_a (
         .i_clk      (i_clk),
-        .i_rst      (i_rst),
+        .i_rst      (i_restart),
         .i_count    (i_init),
         .i_plus     (),
         .i_minus    (w_tick),
@@ -79,4 +72,14 @@ module chess_clock_player # (
         .o_zero     (o_zero)
     );
 
+    /// Драйвер 7-сегментного индикатора (десятичный) (каскад)
+    drv_segment_dec_w # (
+        .p_width    (2)
+    ) 
+    sgmnt (
+        .o_drv_sgmnt(o_drv_sgmnt),
+        .i_value    (w_val)
+    );
+
+    assign o_drv_led = {4{i_win}};
 endmodule

@@ -1,7 +1,5 @@
 `timescale 1ns / 1ps
 
-//import constant::*;
-
 /// Шахматные часы
 module chess_clock # (
     p_divider = 17_865_771,
@@ -39,7 +37,7 @@ module chess_clock # (
     /// Драйвер тактовой кнопки / тумблера
     drv_switch # (
         .p_scale    (p_scale),
-        .p_mode     (`PULLUP)   
+        .p_mode     ("pullup")   
     )
     sw_restart (
         .i_drv_sw   (i_sw_restart),
@@ -55,7 +53,7 @@ module chess_clock # (
     /// Драйвер тактовой кнопки / тумблера
     drv_switch # (
         .p_scale    (p_scale),
-        .p_mode     (`PULLUP)   
+        .p_mode     ("pullup")   
     )
     sw_stop (
         .i_drv_sw   (i_sw_stop),
@@ -68,12 +66,13 @@ module chess_clock # (
     );
 	 
 	wire [3:0] w_init [1:0];
+    wire w_init_change;
 	/// Драйвер тактовой кнопки / тумблера (матрица)
     drv_switch_h_w # (
         .p_height       (2),
         .p_width        (4),
         .p_scale        (p_scale),
-        .p_mode         (`PULLDOWN)        
+        .p_mode         ("pulldown")        
     ) 
     sw_init (
         .i_drv_sw       (i_sw_init),
@@ -83,7 +82,7 @@ module chess_clock # (
         .o_click        (),
         .o_release      (),
         .o_toggle       (),
-        .o_toggle_common()     
+        .o_toggle_common(w_init_change)     
     );
 
     wire w_player_a_stop;
@@ -100,7 +99,8 @@ module chess_clock # (
         .o_drv_sgmnt(o_player_a_sgmnt),
         .o_drv_led  (o_player_a_led),
         .i_clk      (i_clk_50m),
-        .i_rst      (w_restart),
+        .i_rst      (i_rst),
+        .i_restart  (w_restart),
         .i_init     (w_init),
         .i_stop     (w_player_a_stop),
         .i_win      (w_player_a_win),
@@ -122,7 +122,8 @@ module chess_clock # (
         .o_drv_sgmnt(o_player_b_sgmnt),
         .o_drv_led  (o_player_b_led),
         .i_clk      (i_clk_50m),
-        .i_rst      (w_restart),
+        .i_rst      (i_rst),
+        .i_restart  (w_restart),
         .i_init     (w_init),
         .i_stop     (w_player_b_stop),
         .i_win      (w_player_b_win),
@@ -134,7 +135,7 @@ module chess_clock # (
     chess_clock_fsm fsm (
         .i_clk          (i_clk_50m),
         .i_rst          (i_rst),
-        .i_restart      (w_sw_restart_click),
+        .i_restart      (w_sw_restart_click | w_init_change),
         .i_stop         (w_sw_stop_click),
         .i_player_a_turn(w_player_a_turn),
         .i_player_a_zero(w_player_a_zero),
