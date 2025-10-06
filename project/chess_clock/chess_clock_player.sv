@@ -60,7 +60,7 @@ module chess_clock_player # (
 
     wire [3:0] w_val [1:0];
     /// Счетчик десятичный (2 разряда)
-    counter_dec_2w cnt_player_a (
+    counter_dec_2w cnt (
         .i_clk      (i_clk),
         .i_rst      (i_restart),
         .i_count    (i_init),
