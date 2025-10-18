@@ -11,17 +11,17 @@
 /// Драйвер 7-сегментного индикатора (десятичный без знака)
 module drv_segment_dec (
     o_drv_sgmnt,
-    i_value
+    i_val
     );
     
     output [6:0]    o_drv_sgmnt;
     
-    input [3:0]     i_value;
+    input [3:0]     i_val;
 
     always_comb begin
         o_drv_sgmnt = 7'b1111111;
 
-        case (i_value)
+        case (i_val)
             4'd0: o_drv_sgmnt = 7'b1000000; // 0
             4'd1: o_drv_sgmnt = 7'b1111001; // 1
             4'd2: o_drv_sgmnt = 7'b0100100; // 2

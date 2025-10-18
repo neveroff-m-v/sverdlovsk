@@ -78,5 +78,5 @@ module code_lock_fsm (
         end
     end
 
-    assign o_open = (l_state == OPEN) ? '1 : '0;
+    assign o_open = (l_state == OPEN) ? 'b1 : 'b0;
 endmodule

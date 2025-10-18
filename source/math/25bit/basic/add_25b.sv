@@ -1,10 +1,10 @@
-/// Сумма (2 числа 25-бит)
-module add_2x25b (
+/// Сумма f(x,y) = x + y (25-бит)
+module add_25b (
     i_val,
     o_val
     );
 
-    input [24:0]    i_val [1:0];
+    input  [24:0]   i_val [2];
     output [24:0]   o_val;
 
     always_comb begin

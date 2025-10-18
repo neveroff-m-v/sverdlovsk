@@ -25,7 +25,7 @@ module timer # (
         END
     } l_state = IDLE;
 
-    logic [lp_depth-1:0] l_time = '0;
+    logic [lp_depth-1:0] l_time = 'b0;
     
     always_ff @ (posedge i_clk) begin
         if (i_rst) begin
@@ -57,18 +57,18 @@ module timer # (
 
     always_ff @ (posedge i_clk) begin
         if (i_rst) begin
-            l_time <= '0;
+            l_time <= 'b0;
         end
         else begin
             case (l_time)
-                IDLE: l_time <= l_time + '1;
+                IDLE: l_time <= l_time + 'b1;
                 STOP: l_time <= l_time;
-                END: l_time <= '0;
+                END: l_time <= 'b0;
                 default: l_time <= l_time;
             endcase
         end
     end
     
     assign o_time = l_time;
-    assign o_end = (l_state == END) ? '1 : '0;
+    assign o_end = (l_state == END) ? 'b1 : 'b0;
 endmodule

@@ -4,7 +4,7 @@
 module counter_dec_2w (
     i_clk,
     i_rst,
-    i_count,
+    i_val,
     i_plus,
     i_minus,
     o_count,

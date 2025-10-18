@@ -103,9 +103,9 @@ module chess_clock_fsm (
         end
     end
     
-    assign o_player_a_stop = (l_state == TURN_A) ? '0 : '1;
-    assign o_player_a_win  = (l_state == WIN_A) ? '1 : '0;
-    assign o_player_b_stop = (l_state == TURN_B) ? '0 : '1;
-    assign o_player_b_win  = (l_state == WIN_B) ? '1 : '0;
-    assign o_restart       = (l_state == START) ? '1 : '0;
+    assign o_player_a_stop = (l_state == TURN_A) ? 'b0 : 'b1;
+    assign o_player_a_win  = (l_state == WIN_A) ? 'b1 : 'b0;
+    assign o_player_b_stop = (l_state == TURN_B) ? 'b0 : 'b1;
+    assign o_player_b_win  = (l_state == WIN_B) ? 'b1 : 'b0;
+    assign o_restart       = (l_state == START) ? 'b1 : 'b0;
 endmodule

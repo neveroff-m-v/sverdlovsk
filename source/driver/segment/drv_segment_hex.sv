@@ -11,17 +11,17 @@
 /// Драйвер 7-сегментного индикатора (шестнадцатеричный без знака)
 module drv_segment_hex (
     o_drv_sgmnt,
-    i_value
+    i_val
     );
     
     output [6:0]    o_drv_sgmnt;
     
-    input [4:0]     i_value;
+    input [4:0]     i_val;
 
     always_comb begin
         o_drv_sgmnt = 7'b1111111;
 
-        case (i_value)
+        case (i_val)
             4'h0: o_drv_sgmnt = 7'b1000000; // 0
             4'h1: o_drv_sgmnt = 7'b1111001; // 1
             4'h2: o_drv_sgmnt = 7'b0100100; // 2
@@ -32,12 +32,12 @@ module drv_segment_hex (
             4'h7: o_drv_sgmnt = 7'b1111000; // 7
             4'h8: o_drv_sgmnt = 7'b0000000; // 8
             4'h9: o_drv_sgmnt = 7'b0010000; // 9 
-            4'hA: o_drv_sgmnt = 7'b0010010; // A
-            4'hB: o_drv_sgmnt = 7'b0000010; // B
-            4'hC: o_drv_sgmnt = 7'b1111000; // C
-            4'hD: o_drv_sgmnt = 7'b0000000; // D
-            4'hE: o_drv_sgmnt = 7'b0010000; // E 
-            4'hF: o_drv_sgmnt = 7'b0010000; // F
+            4'hA: o_drv_sgmnt = 7'b0001000; // A
+            4'hB: o_drv_sgmnt = 7'b0000011; // B
+            4'hC: o_drv_sgmnt = 7'b1000110; // C
+            4'hD: o_drv_sgmnt = 7'b0100001; // D
+            4'hE: o_drv_sgmnt = 7'b0000110; // E 
+            4'hF: o_drv_sgmnt = 7'b0001110; // F
         endcase
     end
 endmodule

@@ -25,7 +25,7 @@ module schmitt_trigger # (
         FALL
     } l_state = START;
 
-    logic [lp_depth-1:0] l_count = '0;
+    logic [lp_depth-1:0] l_count = 'b0;
     
     always_ff @ (posedge i_clk) begin
         if (i_rst) begin
@@ -69,20 +69,20 @@ module schmitt_trigger # (
 
     always_ff @ (posedge i_clk) begin
         if (i_rst) begin
-            l_count <= '0;
+            l_count <= 'b0;
         end
         else begin
             case (l_state)
-                LOW: l_count <= '0;
-                RISE: l_count <= l_count + '1;
-                HIGH: l_count <= '0;
-                FALL: l_count <= l_count + '1;
+                LOW: l_count <= 'b0;
+                RISE: l_count <= l_count + 'b1;
+                HIGH: l_count <= 'b0;
+                FALL: l_count <= l_count + 'b1;
                 default: l_count <= l_count;
             endcase
         end
     end
     
     assign o_out =
-        (l_state == HIGH) ? '1 :
-		(l_state == FALL) ? '1 : '0;
+        (l_state == HIGH) ? 'b1 :
+		(l_state == FALL) ? 'b1 : 'b0;
 endmodule

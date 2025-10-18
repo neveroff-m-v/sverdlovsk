@@ -1,24 +1,25 @@
 /// Генератор гармонических колебаний sin/cos (25-бит)
-module harm_gen_25b (
+/// f(t) = α + δt
+module gen_hrm_25b (
     i_clk,
     i_rst,
     i_tick,
     i_alpha,
     i_delta,
-    o_theta
+    o_val
     );
 
     input           i_clk;
     input           i_rst;
     input           i_tick;
-    input [24:0]    i_alpha [1:0];
-    input [24:0]    i_delta [1:0];
-    output [24:0]   o_theta [1:0];
+    input  [24:0]   i_alpha [2];
+    input  [24:0]   i_delta [2];
+    output [24:0]   o_val [2];
 
-    logic [24:0] l_alpha [1:0];
-    logic [24:0] l_delta [1:0];
+    logic [24:0] l_alpha [2];
+    logic [24:0] l_delta [2];
 
-    wire [24:0] w_theta [1:0];
+    wire [24:0] w_theta [2];
     hrm_25b hrm (
         .i_alpha    (l_alpha),
         .i_delta    (l_delta),
@@ -36,5 +37,5 @@ module harm_gen_25b (
         end
     end
 
-    assign o_theta = w_theta;
+    assign o_val = w_theta;
 endmodule

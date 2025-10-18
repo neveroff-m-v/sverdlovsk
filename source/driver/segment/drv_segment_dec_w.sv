@@ -24,7 +24,7 @@ module drv_segment_dec_w # (
     generate
     for (i = 0; i < p_width; i++) begin : segment
         /// Драйвер 7-сегментного индикатора (десятичный)
-        drv_segment_dec sgmnt_player_a_1 (
+        drv_segment_dec sgmnt (
             .o_drv_sgmnt(o_drv_sgmnt[i]),
             .i_value    (i_value[i])
         );

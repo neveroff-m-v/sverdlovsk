@@ -51,5 +51,5 @@ module drv_pwm_10b (
         end
     end
 
-    assign o_drv_port = (l_state == HIGH) ? '1 : '0;
+    assign o_drv_port = (l_state == HIGH) ? 'b1 : 'b0;
 endmodule
