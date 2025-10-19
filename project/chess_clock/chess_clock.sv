@@ -1,7 +1,7 @@
 `timescale 1ns / 1ps
 
 /// Шахматные часы
-module chess_clock # (
+module chess_tick # (
     p_divider = 17_865_771,
     p_scale = 3
     )(
@@ -90,7 +90,7 @@ module chess_clock # (
     wire w_player_a_turn;
     wire w_player_a_zero;
     /// Шахматные часы (интерфейс игрока)
-    chess_clock_player # (
+    chess_tick_player # (
         .p_divider  (p_divider),
         .p_scale    (p_scale)
     )
@@ -113,7 +113,7 @@ module chess_clock # (
     wire w_player_b_turn;
     wire w_player_b_zero;
     /// Шахматные часы (интерфейс игрока)
-    chess_clock_player # (
+    chess_tick_player # (
         .p_divider  (p_divider),
         .p_scale    (p_scale)
     )
@@ -132,7 +132,7 @@ module chess_clock # (
     );
 
     /// Шахматные часы FSM
-    chess_clock_fsm fsm (
+    chess_tick_fsm fsm (
         .i_clk          (i_clk_50m),
         .i_rst          (i_rst),
         .i_restart      (w_sw_restart_click | w_init_change),

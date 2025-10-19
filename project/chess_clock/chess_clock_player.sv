@@ -1,7 +1,7 @@
 `timescale 1ns / 1ps
 
 /// Шахматные часы (интерфейс игрока)
-module chess_clock_player # (
+module chess_tick_player # (
     p_divider = 50_000_000,
     p_scale = 3
     )(
@@ -48,10 +48,10 @@ module chess_clock_player # (
 
     wire w_tick;
     /// Делитель тактовой частоты
-    clock # (
+    tick # (
         .p_divider  (p_divider)
     ) 
-    clk (
+    tck (
         .i_clk      (i_clk),
         .i_rst      (i_restart),
         .i_stop     (i_stop),

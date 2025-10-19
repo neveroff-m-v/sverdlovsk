@@ -21,7 +21,7 @@ module serial # (
 
     wire w_get;
     counter # (
-        .p_scale    (p_width)
+        .p_scale    (p_width-1)
     )
     cnt (
         .i_clk      (i_clk),
@@ -41,7 +41,7 @@ module serial # (
         end
         else begin
             l_val    <= (w_get) ? i_val : 
-                        (i_stp) ? (l_val >> 1) :
+                        (i_stp) ? {l_val[0], l_val[p_width-1:1]} :
                         l_val;
         end
     end

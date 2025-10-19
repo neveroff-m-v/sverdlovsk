@@ -11,10 +11,10 @@ module sample (
     output [6:0]    o_sgmnt [4];
 
     wire w_sec;
-    clock # (
+    tick # (
         .p_divider  (100_000_000)
     )
-    clk (
+    tck (
         .i_clk      (i_clk),
         .i_rst      (),
         .i_stop     (),

@@ -2,90 +2,96 @@ module drv_audio_wm8731 (
     o_drv_xck,
     o_drv_bclk,
     o_drv_dac_dat,
-    o_drv_dac_lrck,
+    o_drv_dac_clrck,
     i_drv_adc_dat,
-    o_drv_adc_lrck,
+    o_drv_adc_clrck,
     i_clk,
     i_rst,
-    i_val [15:0]
+    i_dat,
+    o_ack,
+    o_dat,
+    o_req
     );
 
     output          o_drv_xck;
     output          o_drv_bclk;
     output          o_drv_dac_dat;
-    output          o_drv_dac_lrck;
+    output          o_drv_dac_clrck;
     input           i_drv_adc_dat;
-    output          o_drv_adc_lrck;
+    output          o_drv_adc_clrck;
 
     input           i_clk;
     input           i_rst;
-    input  [15:0]   i_val;
+    input  [15:0]   i_dat [1:0];
+    output          o_ack;
+    output [15:0]   o_dat [1:0];
+    output          o_req;
 
-    wire w_bclk_edge;
-    clock # (
+    wire w_bclk;
+    tick # (
         .p_divider  (17)
     )
-    clk_0 (
+    tck_bclk (
         .i_clk      (i_clk),
-        .i_rst      (1'b0),
+        .i_rst      (i_rst),
         .i_stop     (1'b0),
-        .o_out      (w_bclk_edge)
+        .o_out      (w_bclk)
     );
 
-    wire w_bclk_out;
-    signal sgnl_0 (
+    signal sgn_bclk (
         .i_clk      (i_clk),
-        .i_rst      (1'b0),
-        .o_out      (w_bclk_out),
+        .i_rst      (i_rst),
+        .o_out      (o_drv_bclk),
         .i_posedge  (),
         .i_negedge  (),
-        .i_edge     (w_bclk_edge)
+        .i_edge     (w_bclk)
     );
 
-    wire w_dac_lrck_edge;
-    clock # (
+    serial # (
+        .p_width    (32)
+    )
+    srl (
+		.i_clk	(i_clk),
+    	.i_rst	(i_rst),
+    	.i_val	({i_dat[0], i_dat[1]}),
+    	.i_stp	(w_bclk),
+    	.o_val	(o_drv_dac_dat),
+    	.o_stp	(o_ack)
+    );
+
+    parallel # (
+        .p_width    (32)
+    )
+    prl (
+		.i_clk	(i_clk),
+    	.i_rst	(i_rst),
+    	.i_val	(i_drv_adc_dat),
+    	.i_stp	(w_bclk),
+    	.o_val	({o_dat[0], o_dat[1]}),
+    	.o_stp	(o_req)
+    );
+
+    wire w_clrck;
+    tick # (
         .p_divider  (544)
     )
-    clk_1 (
+    tck_lrck (
         .i_clk      (i_clk),
-        .i_rst      (1'b0),
+        .i_rst      (i_rst),
         .i_stop     (1'b0),
-        .o_out      (w_dac_lrck_edge)
+        .o_out      (w_clrck)
     );
 
-    wire w_dac_lrck_out; 
-    signal sgnl_1 (
+    wire w_clrck_out;
+    signal sgn_clrck (
         .i_clk      (i_clk),
-        .i_rst      (1'b0),
-        .o_out      (w_dac_lrck_out),
+        .i_rst      (i_rst),
+        .o_out      (w_clrck_out),
         .i_posedge  (),
         .i_negedge  (),
-        .i_edge     (w_dac_lrck_edge)
+        .i_edge     (w_clrck)
     );
 
-    wire w_dac_dat_edge;
-    clock # (
-        .p_divider  (54400)
-    )
-    clk_2 (
-        .i_clk      (i_clk),
-        .i_rst      (1'b0),
-        .i_stop     (1'b0),
-        .o_out      (w_dac_dat_edge)
-    );
-
-    wire w_dac_dat_out; 
-    signal sgnl_2 (
-        .i_clk      (i_clk),
-        .i_rst      (1'b0),
-        .o_out      (w_dac_dat_out),
-        .i_posedge  (),
-        .i_negedge  (),
-        .i_edge     (w_dac_dat_edge)
-    );   
-
-    assign o_drv_bclk = w_bclk_out;
-    assign o_drv_dac_lrck = w_dac_lrck_out;
-    assign o_drv_dac_dat = w_dac_dat_out;
-
+    assign o_drv_adc_clrck = w_clrck_out;
+    assign o_drv_dac_clrck = w_clrck_out;
 endmodule

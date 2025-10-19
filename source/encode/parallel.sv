@@ -21,7 +21,7 @@ module parallel # (
 
     wire w_set;
     counter # (
-        .p_scale    (p_width)
+        .p_scale    (p_width-1)
     )
     cnt (
         .i_clk      (i_clk),
@@ -41,7 +41,7 @@ module parallel # (
         end
         else begin
             l_val    <= (w_set) ? 'd0 : 
-                        (i_stp) ? (l_val << 1) | i_val :
+                        (i_stp) ? {l_val[p_width-2:0], i_val} :
                         l_val;
         end
     end
