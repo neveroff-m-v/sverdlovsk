@@ -1,7 +1,7 @@
 `timescale 1ns / 1ps
 
-/// Драйвер 7-сегментного индикатора (десятичный без знака) (строка)
-module drv_segment_dec_w # (
+/// Драйвер 7-сегментного индикатора (шестнадцатеричный без знака) (строка)
+module drv_segment_hex_w # (
     p_width = 4
     )(
     o_drv_sgmnt,
@@ -16,7 +16,7 @@ module drv_segment_dec_w # (
     generate
     for (i = 0; i < p_width; i++) begin : segment
         /// Драйвер 7-сегментного индикатора (десятичный)
-        drv_segment_dec sgmnt (
+        drv_segment_hex sgmnt (
             .o_drv_sgmnt(o_drv_sgmnt[i]),
             .i_val      (i_val[i])
         );

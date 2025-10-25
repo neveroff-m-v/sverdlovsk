@@ -1,31 +1,38 @@
 `timescale 1ns / 1ps
 
 /// Детектор переднего/заднего фронта и изменения сигнала
-module detector (
+module detector # (
+    )(
     i_clk,
+    i_rst,
+    // ---
     i_in,
     o_posedge,
     o_negedge,
     o_edge
     );
     
-    input       i_clk;
-    input       i_in;
-    output      o_posedge;
-    output      o_negedge;
-    output      o_edge;
+                                // CLOCK / RESET
+    input       i_clk;          // тактирование
+    input       i_rst;          // сброс
+
+                                // INTERCONNECT
+    input       i_in;           // вход
+    output      o_posedge;      // ___/‾‾‾ передний фронт
+    output      o_negedge;      // ‾‾‾\___ задний фронт
+    output      o_edge;         // __/‾\__ фронт (изменение сигнла)
     
-    logic l_past;
+    logic [1:0] l_pattern <= 'd0;
     always_ff @ (posedge i_clk) begin
-        l_past <= i_in;
+        if (i_rst) begin
+            l_pattern <= 'd0;
+        end
+        else begin
+            l_pattern <= {l_pattern[0], i_in};
+        end
     end
     
-    // ___/‾‾‾ Передний фронт
-    assign o_posedge = (~ l_past) & (  i_in);
-
-    // ‾‾‾\___ Задний фронт
-    assign o_negedge = (  l_past) & (~ i_in);
-
-    // __/‾\__ Изменение сигнала
-	assign o_edge    = (  l_past) ^ (  i_in);
+    assign o_posedge = (~ l_pattern[1]) & (  l_pattern[0]);
+    assign o_negedge = (  l_pattern[1]) & (~ l_pattern[0]);
+	assign o_edge    = (  l_pattern[1]) ^ (  l_pattern[0]);
 endmodule

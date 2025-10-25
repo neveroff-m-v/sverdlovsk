@@ -22,16 +22,16 @@ module drv_segment_dec (
         o_drv_sgmnt = 7'b1111111;
 
         case (i_val)
-            4'd0: o_drv_sgmnt = 7'b1000000; // 0
-            4'd1: o_drv_sgmnt = 7'b1111001; // 1
-            4'd2: o_drv_sgmnt = 7'b0100100; // 2
-            4'd3: o_drv_sgmnt = 7'b0110000; // 3
-            4'd4: o_drv_sgmnt = 7'b0011001; // 4
-            4'd5: o_drv_sgmnt = 7'b0010010; // 5
-            4'd6: o_drv_sgmnt = 7'b0000010; // 6
-            4'd7: o_drv_sgmnt = 7'b1111000; // 7
-            4'd8: o_drv_sgmnt = 7'b0000000; // 8
-            4'd9: o_drv_sgmnt = 7'b0010000; // 9 
+            'd0: o_drv_sgmnt = 'b1000000; // 0
+            'd1: o_drv_sgmnt = 'b1111001; // 1
+            'd2: o_drv_sgmnt = 'b0100100; // 2
+            'd3: o_drv_sgmnt = 'b0110000; // 3
+            'd4: o_drv_sgmnt = 'b0011001; // 4
+            'd5: o_drv_sgmnt = 'b0010010; // 5
+            'd6: o_drv_sgmnt = 'b0000010; // 6
+            'd7: o_drv_sgmnt = 'b1111000; // 7
+            'd8: o_drv_sgmnt = 'b0000000; // 8
+            'd9: o_drv_sgmnt = 'b0010000; // 9 
         endcase
     end
 endmodule

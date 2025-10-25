@@ -5,8 +5,10 @@ module drv_audio_wm8731 (
     o_drv_dac_clrck,
     i_drv_adc_dat,
     o_drv_adc_clrck,
+    // ---
     i_clk,
     i_rst,
+    // ---
     i_dat,
     o_ack,
     o_dat,
@@ -22,14 +24,35 @@ module drv_audio_wm8731 (
 
     input           i_clk;
     input           i_rst;
+
     input  [15:0]   i_dat [1:0];
     output          o_ack;
     output [15:0]   o_dat [1:0];
     output          o_req;
 
+    wire w_xck;
+    tick # (
+        .p_divider  (2)
+    )
+    tck_xck (
+        .i_clk      (i_clk),
+        .i_rst      (i_rst),
+        .i_stop     (1'b0),
+        .o_out      (w_xck)
+    );
+
+    generator gen_xck (
+        .i_clk      (i_clk),
+        .i_rst      (i_rst),
+        .o_out      (o_drv_xck),
+        .i_posedge  (),
+        .i_negedge  (),
+        .i_edge     (w_xck)
+    );
+
     wire w_bclk;
     tick # (
-        .p_divider  (17)
+        .p_divider  (20)
     )
     tck_bclk (
         .i_clk      (i_clk),
@@ -38,7 +61,7 @@ module drv_audio_wm8731 (
         .o_out      (w_bclk)
     );
 
-    signal sgn_bclk (
+    generator gen_bclk (
         .i_clk      (i_clk),
         .i_rst      (i_rst),
         .o_out      (o_drv_bclk),
@@ -53,7 +76,8 @@ module drv_audio_wm8731 (
     srl (
 		.i_clk	(i_clk),
     	.i_rst	(i_rst),
-    	.i_val	({i_dat[0], i_dat[1]}),
+    	//.i_val	({i_dat[1][0], i_dat[0][15:0], i_dat[1][15:1]}),
+        .i_val	({i_dat[0][15:0], i_dat[1][15:0]}),
     	.i_stp	(w_bclk),
     	.o_val	(o_drv_dac_dat),
     	.o_stp	(o_ack)
@@ -67,13 +91,14 @@ module drv_audio_wm8731 (
     	.i_rst	(i_rst),
     	.i_val	(i_drv_adc_dat),
     	.i_stp	(w_bclk),
-    	.o_val	({o_dat[0], o_dat[1]}),
+    	//.o_val	({o_dat[1][0], o_dat[0][15:0], o_dat[1][15:1]}),
+        .o_val	({o_dat[0][15:0], o_dat[1][15:0]}),
     	.o_stp	(o_req)
     );
 
     wire w_clrck;
     tick # (
-        .p_divider  (544)
+        .p_divider  (640)
     )
     tck_lrck (
         .i_clk      (i_clk),
@@ -83,7 +108,7 @@ module drv_audio_wm8731 (
     );
 
     wire w_clrck_out;
-    signal sgn_clrck (
+    generator gen_clrck (
         .i_clk      (i_clk),
         .i_rst      (i_rst),
         .o_out      (w_clrck_out),

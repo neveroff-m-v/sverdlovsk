@@ -23,7 +23,7 @@ module clock # (
         .o_out      (w_edge)
     );
 
-    signal sgnl (
+    generator gen (
         .i_clk      (i_clk),
         .i_rst      (i_rst),
         .o_out      (o_out),
