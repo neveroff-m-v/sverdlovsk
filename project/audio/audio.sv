@@ -21,7 +21,8 @@ module audio (
     output          o_adc_clrck;
 
     wire [15:0] w_cos;
-    drv_segment_hex_w # (
+    drv_segment_w # (
+        .p_symbol   ("hex"),
         .p_width    (4)
     )
     sgmnt (

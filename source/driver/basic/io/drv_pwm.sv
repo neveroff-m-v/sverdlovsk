@@ -1,25 +1,27 @@
 `timescale 1ns / 1ps
 
-/// Драйвер выхода с широтно импульсной модуляцией (шим) (10 бит)
-module drv_pwm_10b (
+/// Драйвер выхода с широтно импульсной модуляцией (шим)
+module drv_pwm # (
+    p_depth = 10
+    )(
     o_drv_port,
     i_clk,
     i_rst,
     i_val
     );
 
-    output o_drv_port;
+    output                  o_drv_port;
 
-    input i_clk;
-    input i_rst;
-    input [9:0] i_val;
+    input                   i_clk;
+    input                   i_rst;
+    input  [p_depth-1:0]    i_val;
 
     enum logic {
         LOW,
         HIGH
     } l_state = LOW;
 
-    logic [9:0] l_count;
+    logic [p_depth-1:0] l_count;
 
     always_ff @ (posedge i_clk) begin
         if (i_rst) begin
@@ -33,7 +35,7 @@ module drv_pwm_10b (
                 end
 
                 HIGH: begin
-                    if(l_count == 10'd1023) l_state <= LOW;
+                    if(l_count == 'd0) l_state <= LOW;
                     else l_state <= HIGH;
                 end
 
@@ -44,10 +46,10 @@ module drv_pwm_10b (
     
     always_ff @ (posedge i_clk) begin
         if (i_rst) begin
-            l_count <= 10'd0;
+            l_count <= 'd0;
         end
         else begin
-            l_count <= l_count + 10'd1;
+            l_count <= l_count + 'd1;
         end
     end
 
