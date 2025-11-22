@@ -1,3 +1,11 @@
+/*
+    SVERDLOVSK
+    system verilog library
+
+    Neveroff M.V.
+    2025
+*/
+
 module audio (
     i_clk_50m,
     o_hex,
@@ -32,7 +40,7 @@ module audio (
 
     wire w_tck_50k;
     tick # (
-        .p_divider  (2_50)
+        .p_divider  (1_00)
     )
     tck (
         .i_clk      (i_clk_50m),
@@ -47,6 +55,7 @@ module audio (
         .o_val   (w_cos)
     );
 
+    wire [15:0] w_mic [1:0];
     drv_audio_wm8731 wm8731 (
         .o_drv_xck          (o_xck),
         .o_drv_bclk         (o_bclk),
@@ -59,6 +68,7 @@ module audio (
         .i_rst              ('b0),
         // ---
         .i_dat              ('{w_cos[15:0], w_cos[15:0]}),
+        //.i_dat              (w_mic),
         .o_ack              (),
         .o_dat              (),
         .o_req              ()

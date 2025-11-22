@@ -1,4 +1,10 @@
-`timescale 1ns / 1ps
+/*
+    SVERDLOVSK
+    system verilog library
+
+    Neveroff M.V.
+    2025
+*/
 
 /// Шахматные часы (fsm)
 module chess_tick_fsm (

@@ -1,3 +1,12 @@
+/*
+    SVERDLOVSK
+    system verilog library
+
+    Neveroff M.V.
+    2025
+*/
+
+/// Модуль для тестирования
 module sample (
     i_clk,
     i_sw,

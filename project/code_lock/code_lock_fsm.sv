@@ -1,4 +1,10 @@
-`timescale 1ns / 1ps
+/*
+    SVERDLOVSK
+    system verilog library
+
+    Neveroff M.V.
+    2025
+*/
 
 /// Кодовый замок (fsm)
 module code_lock_fsm (

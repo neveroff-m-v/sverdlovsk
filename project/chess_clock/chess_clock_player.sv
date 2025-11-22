@@ -1,4 +1,10 @@
-`timescale 1ns / 1ps
+/*
+    SVERDLOVSK
+    system verilog library
+
+    Neveroff M.V.
+    2025
+*/
 
 /// Шахматные часы (интерфейс игрока)
 module chess_tick_player # (

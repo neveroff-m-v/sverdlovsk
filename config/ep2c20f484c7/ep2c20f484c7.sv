@@ -1,3 +1,11 @@
+/*
+    SVERDLOVSK
+    system verilog library
+
+    Neveroff M.V.
+    2025
+*/
+
 module ep2c20f484c7 (
     i_clk_50m,
     i_clk_27m,
